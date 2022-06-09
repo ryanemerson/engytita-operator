@@ -57,7 +57,7 @@ func (r *CacheReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		}), nil
 	})
 
-	retry, delay, err := cache.Builder.
+	retry, delay, err := cache.PipelineBuilder(instance).
 		WithContextProvider(ctxProvider).
 		Build().
 		Process(instance)
