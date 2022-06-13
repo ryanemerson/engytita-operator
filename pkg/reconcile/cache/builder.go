@@ -16,15 +16,15 @@ func (f HandlerFunc) Handle(i interface{}, ctx reconcile.Context) {
 
 func PipelineBuilder(cache *v1alpha1.Cache) *pipeline.Builder {
 	builder := &pipeline.Builder{}
-	if cache.Spec.Infinispan != nil {
+	if cache.Spec.Redis != nil {
+		builder.WithHandlers(
+			HandlerFunc(redis.DaemonSet),
+		)
+	} else {
 		builder.WithHandlers(
 			HandlerFunc(infinispan.ConfigMap),
 			HandlerFunc(infinispan.Service),
 			HandlerFunc(infinispan.DaemonSet),
-		)
-	} else {
-		builder.WithHandlers(
-			HandlerFunc(redis.DaemonSet),
 		)
 	}
 	return builder

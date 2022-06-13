@@ -28,6 +28,9 @@ type CacheReconciler struct {
 //+kubebuilder:rbac:groups=engytita.org,resources=caches/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=engytita.org,resources=caches/finalizers,verbs=update
 
+// +kubebuilder:rbac:groups=apps,namespace=engytita-operator-system,resources=daemonsets,verbs=get;list;watch;create;delete;deletecollection;update
+// +kubebuilder:rbac:groups=core,namespace=engytita-operator-system,resources=services;configmaps,verbs=get;list;watch;create;delete;deletecollection;update
+
 // Reconcile the Cache resource
 func (r *CacheReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	reqLogger := log.FromContext(ctx)
@@ -53,6 +56,8 @@ func (r *CacheReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 			Client:        r.Client,
 			Ctx:           ctx,
 			EventRecorder: r.EventRecorder,
+			Namespace:     instance.Namespace,
+			Owner:         instance,
 			Scheme:        r.Scheme,
 		}), nil
 	})
@@ -68,8 +73,8 @@ func (r *CacheReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *CacheReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	r.Client = mgr.GetClient()
 	r.Scheme = mgr.GetScheme()
+	r.Client = mgr.GetClient()
 	r.EventRecorder = mgr.GetEventRecorderFor("cache")
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1alpha1.Cache{}).
