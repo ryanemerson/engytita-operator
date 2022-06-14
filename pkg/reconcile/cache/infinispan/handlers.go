@@ -24,6 +24,10 @@ var (
 
 func Service(c *v1alpha1.Cache, ctx reconcile.Context) {
 	svc := &corev1.Service{
+		TypeMeta: metav1.TypeMeta{
+			APIVersion: "v1",
+			Kind:       "Service",
+		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      c.Name,
 			Namespace: c.Namespace,
@@ -43,7 +47,8 @@ func Service(c *v1alpha1.Cache, ctx reconcile.Context) {
 		servicePort.Port = 11222
 		return nil
 	}
-	_, err := ctx.Client().CreateOrPatch(svc, mutateFn, client.SetControllerRef)
+	res, err := ctx.Client().CreateOrPatch(svc, mutateFn, client.SetControllerRef)
+	ctx.Log().Info(fmt.Sprintf("Res=%s,Err=%s", res, err))
 	if err != nil {
 		ctx.Requeue(fmt.Errorf("unable to CreateOrPatch Infinispan Service: %w", err))
 	}

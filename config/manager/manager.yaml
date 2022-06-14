@@ -25,8 +25,7 @@ spec:
         control-plane: controller-manager
     spec:
       containers:
-      - args:
-        - --leader-elect
+      -
         image: operator:latest
         name: manager
         securityContext:

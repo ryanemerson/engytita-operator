@@ -2,6 +2,8 @@ package pipeline
 
 import (
 	"fmt"
+	"reflect"
+	"runtime"
 	"runtime/debug"
 	"time"
 
@@ -46,6 +48,6 @@ func invokeHandler(h reconcile.Handler, i interface{}, ctx reconcile.Context) {
 			ctx.Requeue(e)
 		}
 	}()
-	//fmt.Printf("Handler=%s\n", runtime.FuncForPC(reflect.ValueOf(h).Pointer()).Name())
+	fmt.Printf("Handler=%s\n", runtime.FuncForPC(reflect.ValueOf(h).Pointer()).Name())
 	h.Handle(i, ctx)
 }
