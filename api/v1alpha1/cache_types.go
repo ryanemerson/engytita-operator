@@ -4,18 +4,19 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// InfinispanSpec defines all Infinispan specific configuration
-type InfinispanSpec struct {
-}
+//// InfinispanSpec defines all Infinispan specific configuration
+//type InfinispanSpec struct {
+//}
 
 // RedisSpec defines all Redis specific configuration
 type RedisSpec struct {
+	Test bool `json:"test"`
 }
 
 // CacheSpec defines the desired state of Cache
 type CacheSpec struct {
-	Infinispan *InfinispanSpec `json:"infinispan,omitempty"`
-	Redis      *RedisSpec      `json:"redis,omitempty"`
+	//Infinispan *InfinispanSpec `json:"infinispan,omitempty"`
+	Redis *RedisSpec `json:"redis,omitempty"`
 }
 
 // CacheStatus defines the observed state of Cache
