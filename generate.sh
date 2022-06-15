@@ -6,13 +6,11 @@ rm -rf $OUTPUT
 
 ./bin/client-gen --go-header-file hack/boilerplate.go.txt \
   --clientset-name versioned \
-  --input-base \
-  --input engytita/v1alpha1 \
-  --input-dirs github.com/engytita/engytita-operator/api/v1alpha1 \
+  --input-base '' \
+  --input github.com/engytita/engytita-operator/pkg/apis/cache/v1alpha1 \
   --trim-path-prefix=github.com/engytita/engytita-operator \
   --output-package github.com/engytita/engytita-operator/$OUTPUT \
   --output-base ./ \
-  --clientset-api-path /api \
   -v 10
 
 du -h $OUTPUT

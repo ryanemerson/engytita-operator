@@ -4,6 +4,8 @@ package fake
 
 import (
 	clientset "github.com/engytita/engytita-operator/pkg/clientset/versioned"
+	cachev1alpha1 "github.com/engytita/engytita-operator/pkg/clientset/versioned/typed/cache/v1alpha1"
+	fakecachev1alpha1 "github.com/engytita/engytita-operator/pkg/clientset/versioned/typed/cache/v1alpha1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -60,3 +62,8 @@ var (
 	_ clientset.Interface = &Clientset{}
 	_ testing.FakeClient  = &Clientset{}
 )
+
+// CacheV1alpha1 retrieves the CacheV1alpha1Client
+func (c *Clientset) CacheV1alpha1() cachev1alpha1.CacheV1alpha1Interface {
+	return &fakecachev1alpha1.FakeCacheV1alpha1{Fake: &c.Fake}
+}

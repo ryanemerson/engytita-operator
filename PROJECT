@@ -14,7 +14,7 @@ resources:
   domain: org
   group: engytita
   kind: Cache
-  path: github.com/engytita/engytita-operator/api/v1alpha1
+  path: github.com/engytita/engytita-operator/pkg/apis/cache/v1alpha1
   version: v1alpha1
   webhooks:
     defaulting: true

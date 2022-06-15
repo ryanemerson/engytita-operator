@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	cachev1alpha1 "github.com/engytita/engytita-operator/pkg/clientset/versioned/typed/cache/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
@@ -13,12 +14,19 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
+	CacheV1alpha1() cachev1alpha1.CacheV1alpha1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
+	cacheV1alpha1 *cachev1alpha1.CacheV1alpha1Client
+}
+
+// CacheV1alpha1 retrieves the CacheV1alpha1Client
+func (c *Clientset) CacheV1alpha1() cachev1alpha1.CacheV1alpha1Interface {
+	return c.cacheV1alpha1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -65,6 +73,10 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
+	cs.cacheV1alpha1, err = cachev1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
 
 	cs.DiscoveryClient, err = discovery.NewDiscoveryClientForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
@@ -86,6 +98,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
+	cs.cacheV1alpha1 = cachev1alpha1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs
