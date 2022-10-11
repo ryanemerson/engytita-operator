@@ -1,0 +1,7 @@
+name: Image Release
+
+on:
+  push:
+    branches:
+      - 'gh_release'
+  
