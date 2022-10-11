@@ -4,4 +4,40 @@ on:
   push:
     branches:
       - 'gh_release'
-  
+
+jobs:
+  release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Checkout community-operators repo
+        uses: actions/checkout@v2
+        with:
+          repository: k8s-operatorhub/community-operators
+          path: community-operators
+          ref: main
+
+      - name: Create commits
+        run: |
+          cd community-operators
+          git config user.name 'Ryan Emerson'
+          git config user.email 'remerson@redhat.com'
+          touch report.txt
+          git add report.txt
+          git commit -m "Add file"
+
+      - name: Create Pull Request to community-operators repo from forked repository
+        id: cpr
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.MY_TOKEN }}
+          path: community-operators
+          push-to-fork: ryanemerson/community-operators-1
+          commit-message: 'Testing'
+          committer: Ryan Emerson <remerson@redhat.com>
+          author: Ryan Emerson <remerson@redhat.com>
+          branch: test_pr1
+          title: 'Testing'
